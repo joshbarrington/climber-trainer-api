@@ -6,37 +6,29 @@ from core.models import Tag, Exercise
 from workout import serializers
 
 
-class TagViewSet(viewsets.GenericViewSet,
-                 mixins.ListModelMixin,
-                 mixins.CreateModelMixin):
-    """Manage tags in the database"""
+class BaseWorkoutAtrrViewSet(viewsets.GenericViewSet,
+                             mixins.ListModelMixin,
+                             mixins.CreateModelMixin):
+    """Base viewset for user owned exercise attributes"""
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        """Return objects for the current authenticated user"""
+        return self.queryset.filter(user=self.request.user).order_by('-name')
+
+    def perform_create(self, serializer):
+        """Create new object"""
+        serializer.save(user=self.request.user)
+
+
+class TagViewSet(BaseWorkoutAtrrViewSet):
+    """Manage tags in the database"""
     queryset = Tag.objects.all()
     serializer_class = serializers.TagSerializer
 
-    def get_queryset(self):
-        """Return objects for the current authenticated user"""
-        return self.queryset.filter(user=self.request.user).order_by('-name')
 
-    def perform_create(self, serializer):
-        """Create new tag"""
-        serializer.save(user=self.request.user)
-
-
-class ExerciseViewSet(viewsets.GenericViewSet,
-                      mixins.ListModelMixin,
-                      mixins.CreateModelMixin):
+class ExerciseViewSet(BaseWorkoutAtrrViewSet):
     """Manage exercises in the database"""
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
     queryset = Exercise.objects.all()
     serializer_class = serializers.ExerciseSerializer
-
-    def get_queryset(self):
-        """Return objects for the current authenticated user"""
-        return self.queryset.filter(user=self.request.user).order_by('-name')
-
-    def perform_create(self, serializer):
-        """Create new exercise"""
-        serializer.save(user=self.request.user)
