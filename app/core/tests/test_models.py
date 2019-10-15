@@ -52,3 +52,11 @@ class ModelTests(TestCase):
             name='Endurance'
         )
         self.assertEqual(str(tag), tag.name)
+
+    def test_exercise_str(self):
+        """Test exercise string representation"""
+        exercise = models.Exercise.objects.create(
+            user=create_sample_user(),
+            name='Pull Up'
+        )
+        self.assertEqual(str(exercise), exercise.name)
