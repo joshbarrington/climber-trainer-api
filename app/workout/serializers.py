@@ -1,6 +1,5 @@
+from core.models import Exercise, Tag
 from rest_framework import serializers
-
-from core.models import Tag, Exercise
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -8,8 +7,8 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = ('id', 'name')
-        read_only_fields = ('id', )
+        fields = ("id", "name")
+        read_only_fields = ("id",)
 
 
 class ExerciseSerializer(serializers.ModelSerializer):
@@ -17,5 +16,5 @@ class ExerciseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Exercise
-        fields = ('id', 'name')
-        read_only_fields = ('id', )
+        fields = ("id", "name")
+        read_only_fields = ("id",)
